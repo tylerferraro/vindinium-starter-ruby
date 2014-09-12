@@ -19,12 +19,6 @@ class Client
     @http_client.debug_dev = $stdout if @debug
   end
 
-  def start_new_game
-    @game_state = self.request_new_game
-
-
-  end
-
   def request_new_game
     params = { :key => @secret_key, :number_of_turns => @turns, :map => @map }
     response = @http_client.post(@server, params)
