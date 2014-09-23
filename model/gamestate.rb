@@ -1,13 +1,20 @@
 class GameState
-  def attr_reader :id, :turn, :max_turns, :heroes, :board
+  require './model/hero'
+  require './model/gameboard'
+
+  attr_reader :id, :turn, :max_turns, :heroes, :board, :play_url, :view_url
 
   def initialize data
-    @id = data["id"]
-    @turn = data["turn"]
-    @max_turns = data["maxTurns"]
-    @heroes = data["heroes"]
-    @board = GameBoard.new data["board"]
-    @finished = data["finished"]
+    game_data = data['game']
+
+    @id = game_data['id']
+    @turn = game_data['turn']
+    @max_turns = game_data['maxTurns']
+    @heroes = game_data['heroes'].each { |hero| Hero.new hero }
+    @board = GameBoard.new game_data['board']
+    @finished = game_data['finished']
+    @play_url = data['playUrl']
+    @view_url = data['viewUrl']
   end
 
   def is_finished?

@@ -1,5 +1,5 @@
 class Hero
-  def attr_reader :id, :name, :elo, :pos, :life, :gold, :mine_count
+  attr_reader :id, :name, :elo, :pos, :life, :gold, :mine_count
 
   def initialize data
     @id = data['id']
