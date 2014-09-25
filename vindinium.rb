@@ -1,8 +1,8 @@
 #!/usr/bin/ruby
 
 require 'optparse'
-require './bots/assassin'
-require './client'
+require "#{File.dirname(__FILE__)}/lib/bots/assassin"
+require "#{File.dirname(__FILE__)}/client"
 
 # Runs the Vindinium game using the supplied options
 class Vindinium
@@ -24,19 +24,17 @@ class Vindinium
     @bot = AssassinBot.new
   end
 
-  def run_games
-    #@number_of_games.times do |game_number|
-      game_state = @vindinium_client.request_new_game 'training'
-      play_url = game_state.play_url
-      view_url = game_state.view_url
-      puts "Url: #{view_url}"
+  def run_game
+    game = @vindinium_client.request_new_game
+    play_url = game.play_url
+    view_url = game.view_url
+    puts "Url: #{view_url}"
 
-      until game_state.is_finished?
-        dir = @bot.move game_state.board
-        puts "Moving: #{dir}"
-        game_state = @vindinium_client.send_move play_url, dir
-      end
-    #end
+    until game.is_finished?
+      dir = @bot.move game.state
+      puts "Moving: #{dir}"
+      game = @vindinium_client.send_move play_url, dir
+    end
   end
 end
 
@@ -50,10 +48,9 @@ optparse = OptionParser.new do |opts|
   opts.on('-m', '--map MAP', 'Map to use') { |map| options[:map] = map }
   opts.on('-t', '--turns TURNS', 'Number of turns') { |turns| options[:turns] = turns }
   opts.on('-s', '--server SERVER_URL', 'Server url for connection') { |server| options[:server] = server }
-  opts.on('-n', '--number-of-games NUMBER', 'Number of games to run') { |num| options[:number_of_games] = num }
 end
 
 optparse.parse!
 
 vindinium = Vindinium.new options
-vindinium.run_games()
+vindinium.run_game

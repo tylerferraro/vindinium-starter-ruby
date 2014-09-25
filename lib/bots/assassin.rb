@@ -3,8 +3,8 @@ class AssassinBot
     @direction = ["Stay", "North", "South", "East", "West"]
   end
 
-  #model/gameboard.rb
-  def move game_board
+  #lib/board.rb
+  def move game_state
     @direction.sample
   end
 end

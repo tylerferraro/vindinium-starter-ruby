@@ -1,7 +1,7 @@
 class Client
   require 'httpclient'
   require 'json'
-  require './model/gamestate'
+  require "#{File.dirname(__FILE__)}/lib/game"
 
   attr_reader :mode, :server, :debug
 
@@ -12,7 +12,7 @@ class Client
     end
 
     @secret_key = opts[:secret_key]
-    @mode = opts[:mode].to_sym
+    @mode = opts[:mode]
     @server = opts[:server]
 
     #opts.each_pair { |k, v| self.send("#{k}=", v) }
@@ -23,9 +23,9 @@ class Client
     @http_client.debug_dev = $stdout if @debug
   end
 
-  def request_new_game mode
-    params = { 'key' => @secret_key } if mode == 'training'
-    params = { 'key' => @secret_key } if mode == 'arena'
+  def request_new_game
+    params = { 'key' => @secret_key } if @mode == 'training'
+    params = { 'key' => @secret_key } if @mode == 'arena'
 
     response = @http_client.post(@server, params)
 
@@ -34,7 +34,7 @@ class Client
       raise "Error requesting new game. Received response code: #{response.status}"
     end
 
-    GameState.new JSON.parse(response.body)
+    Game.new JSON.parse(response.body)
   end
 
   def send_move url, dir
@@ -46,6 +46,6 @@ class Client
       raise "Error sending move. Received response code: #{response.status}"
     end
 
-    GameState.new JSON.parse(response.body)
+    Game.new JSON.parse(response.body)
   end
 end

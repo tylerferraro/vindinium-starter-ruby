@@ -1,4 +1,4 @@
-class GameBoard
+class Board
   def initialize data
     @size = data['size']
     @board = data['tiles'].scan(/../).map{ |str| Tile.new str }
